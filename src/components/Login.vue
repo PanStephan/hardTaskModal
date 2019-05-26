@@ -1,21 +1,10 @@
 <template>
   <modal
-    title="Modal with form"
+    title="Modal with form + Validate"
     @close="closeWindow">
     <!-- body -->
     <div slot="body">
       <form @submit.prevent="onSubmit">
-
-        <!-- name -->
-        <div class="form-item" :class="{ errorInput: $v.name.$error }">
-          <label>Name:</label>
-          <p class="errorText" v-if="!$v.name.required"> Filed is required! </p>
-          <p class="errorText" v-if="!$v.name.minLength"> Name must have at least {{ $v.name.$params.minLength.min }} !</p>
-          <input
-            v-model="name"
-            :class="{ error: $v.name.$error }"
-            @change="$v.name.$touch()">
-        </div>
 
         <!-- email -->
         <div class="form-item" :class="{ errorInput: $v.email.$error }">
@@ -27,9 +16,20 @@
             :class="{ error: $v.email.$error }"
             @change="$v.email.$touch()">
         </div>
+        <div class="form-item" :class="{ errorInput: $v.password.$error }">
+          <label class="form__label">Password</label>
+          <p class="errorText" v-if="!$v.password.required"> Filed is required! </p>
+          <p class="errorText" v-if="!$v.password.password"> Password is not correct!</p>
+          <input 
+            type="password"
+            v-model="password"
+            :class="{ error: $v.password.$error }"
+            @change="$v.password.$touch()">
+        </div>
         <!-- button -->
         <button class="btn btnPrimary">Submit!</button>
       </form>
+        <button @click="$emit('openCreateWindow')">I need account</button>
     </div>
   </modal>
 </template>
@@ -44,16 +44,11 @@ export default {
   components: { modal },
   data () {
     return {
-      name: '',
       email: '',
       password: ''
     }
   },
   validations: {
-    name: {
-      required,
-      minLength: minLength(4)
-    },
     email: {
       required,
       email
@@ -68,15 +63,13 @@ export default {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         const user = {
-          name: this.name,
           email: this.email,
-          password: this.password
+          password: this.password,
         }
         console.log(user)
 
         // DONE!
         this.password = ''
-        this.name = ''
         this.email = ''
         this.$v.$reset()
         this.$emit('close')
@@ -85,9 +78,8 @@ export default {
     closeWindow() {
       this.$emit('close')
       this.password = ''
-      this.name = ''
       this.email = ''
-    }
+    },    
   }
 }
 </script>

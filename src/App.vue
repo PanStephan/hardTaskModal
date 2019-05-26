@@ -6,10 +6,10 @@
         <div class="container">
 
           <!-- modal with validate -->
-          <button class="btn btnPrimary" @click="modalValidate = !modalValidate">Show modal with form + validate</button>
-          <modalValidate v-show="modalValidate" @close="modalValidate = false"/>
+          <button class="btn btnPrimary" @click="login = !login">log in</button>
+          <login v-show="login" @close="login = false" @openCreateWindow="openCreateWindow"/>
 
-          <modalCreate v-show="modalCreate" @openCreateWindow="openCreateWindow"/>
+          <registration v-show="registration" @close="registration = false"/>
 
         </div>
       </section>
@@ -21,20 +21,21 @@
 
 <script>
 import modals from '@/components/UI/Modal.vue'
-import modalValidate from '@/components/ModalValidate.vue'
-import modalCreate from '@/components/ModalCreate.vue'
+import login from '@/components/Login.vue'
+import registration from '@/components/Registration.vue'
 
 export default {
-  components: { modals, modalValidate, modalCreate },
+  components: { modals, login, registration },
   data () {
     return {
-      modalValidate: false,
-      modalCreate: false
+      login: false,
+      registration: false
     }
   },
   methods: {
     openCreateWindow () {
-      this.$emit('openCreateWindow', this.modalCreate)
+      this.login = false,
+      this.registration = !this.registration
     }
   }
 }
